@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Очередь на семинар</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+    }
+    .queue {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .slot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      margin: 8px 0;
+      background: #e0e0e0;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .taken {
+      background: #c2f0c2;
+    }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: red;
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    @media (max-width: 600px) {
+      .slot {
+        font-size: 18px;
+        padding: 16px;
+      }
+      .remove-btn {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Очередь на семинар</h1>
+  <div class="queue" id="queue"></div>
+
+  <script>
+    const queueSize = 30;
+    const queue = document.getElementById('queue');
+
+    function renderQueue() {
+      queue.innerHTML = '';
+      for (let i = 0; i < queueSize; i++) {
+        const name = localStorage.getItem('slot_' + i);
+        const slot = document.createElement('div');
+        slot.className = 'slot' + (name ? ' taken' : '');
+
+        if (name) {
+          const nameSpan = document.createElement('span');
+          nameSpan.innerText = `${i + 1}. ${name}`;
+
+          const removeBtn = document.createElement('button');
+          removeBtn.innerText = '❌';
+          removeBtn.className = 'remove-btn';
+          removeBtn.onclick = () => {
+            if (confirm("Убрать это имя из очереди?")) {
+              localStorage.removeItem('slot_' + i);
+              renderQueue();
+            }
+          };
+
+          slot.appendChild(nameSpan);
+          slot.appendChild(removeBtn);
+        } else {
+          slot.innerText = `Место ${i + 1} (нажми, чтобы занять)`;
+          slot.onclick = () => {
+            const userName = prompt("Введите ваше имя:");
+            if (userName) {
+              localStorage.setItem('slot_' + i, userName);
+              renderQueue();
+            }
+          };
+        }
+
+        queue.appendChild(slot);
+      }
+    }
+
+    renderQueue();
+  </script>
+</body>
+</html>
