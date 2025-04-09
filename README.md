@@ -1,3 +1,0 @@
-# seminarqueue
-
-nah dont readme
