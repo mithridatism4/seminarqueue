@@ -1,1 +1,3 @@
 # seminarqueue
+
+nah dont readme
